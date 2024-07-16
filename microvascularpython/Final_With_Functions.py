@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 
 img = cv2.imwrite(input("Write filename: "), input("Write name of image: "))
-h = int(input("height of image in micrometers: ")
-w = int(input("Width of image in micrometers: ")
+h = int(input("height of image in micrometers: "))
+w = int(input("Width of image in micrometers: "))
 rows, cols = img.shape[:2]
 
 #kernel blurring (not as effective)
@@ -72,8 +72,28 @@ def main():
     img_bw = cv2.threshold(image_color, thres, 255, cv2.THRESH_BINARY)[1]
     cv2.imwrite("zb.png", img_bw)
     return img_bw
+    
+def calculate_vessel_diameter(image_path, threshold_low=30, threshold_high=150):
+    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) #instead we should call function for black and white
 
-#this is incase you want to put the image into multiple filters
+    edges = cv2.Canny(img, threshold_low, threshold_high)
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    diameters = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        diameter = max(w, h)
+        diameters.append(diameter)
+    if diameters:
+        max_diameter = max(diameters)
+    else:
+        max_diameter = 0
+
+    return max_diameter
+
+
+
+# this is incase you want to put the image into multiple filters
 a = main(img)
 b = to_Kernel(a)
 c = to_BoxFilter(b)
