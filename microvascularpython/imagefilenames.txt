@@ -1,0 +1,4 @@
+/Users/daisymaturo/Downloads/microvascularpython/goose.png
+/Users/daisymaturo/Downloads/microvascularpython/retina_superficial2.png
+/Users/daisymaturo/Downloads/microvascularpython/Flower.png
+/Users/daisymaturo/Downloads/microvascularpython/retina_deep1.png
