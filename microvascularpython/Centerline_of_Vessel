@@ -1,27 +1,30 @@
-#has a problem with paranthesis
-
 import cv2
 import numpy as np
-from skimage import morphology
-
-image = cv2.imread('image name.jpg')
 
 def get_Centerline(input_image):
-    ogImg = input_image
-    gray = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    edges = cv2.Canny(blurred, 30, 150)
-    skeleton = morphology.skeletonize(edges / 255)
-    skeleton = skeleton.astype(np.uint8) * 255
-    contours, _ = cv2.findContours(skeleton, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    contour = max(contours, key=cv2.contourArea)
-    rows, cols = skeleton.shape[:2]
-    [vx, vy, x, y] = cv2.fitLine(contour, cv2.DIST_L2, 0, 0.01, 0.01)
-    lefty = int((-x * vy / vx) + y)
-    righty = int(((cols - x) * vy / vx) + y)
-    cv2.line(ogImg,(cols - 1,pip install -U scikit-image righty), (0, lefty), (0, 255, 0), 2)
+    imgC = cv2.imread(input_image, cv2.IMREAD_GRAYSCALE)
+    blur = cv2.GaussianBlur(imgC, (5, 5), 0) #blurring thing which we already did
+    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    skel = np.zeros_like(thresh)
+    size = np.size(imgC)
+    element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
 
-cv2.imshow('Original Image', original_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    while True:
+        eroded = cv2.erode(thresh, element)
+        temp = cv2.dilate(eroded, element)
+        temp = cv2.subtract(thresh, temp)
+        skel = cv2.bitwise_or(skel, temp)
+        thresh = eroded.copy()
 
+        if cv2.countNonZero(thresh) == 0:
+            break
+
+    contours, hierarchy = cv2.findContours(skel, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    centerline_img = np.zeros_like(imgC)
+
+    for contour in contours:
+        rows, cols = skel.shape
+        vx, vy, x, y = cv2.fitLine(contour, cv2.DIST_L2, 0, 0.01, 0.01)
+        lefty = int((-x * vy / vx) + y)
+        righty = int(((cols - x) * vy / vx) + y)
+        cv2.line(centerline_img, (cols - 1, righty), (0, lefty), 255, 1)
