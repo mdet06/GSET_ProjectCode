@@ -26,7 +26,15 @@ def to_Kernel(input_image):
     #cv2.imshow("kernel blur", output_kernel)
     return output_kernel
 
+def to_micrometers(width_micrometers, height_micrometers):
 
+    dpi_per_um = 39.3701  # Conversion factor from inches to micrometers
+    width_pixels = int(width_micrometers * dpi_per_um)
+    height_pixels = int(height_micrometers * dpi_per_um)
+
+    # Resize the image
+    img = img.resize((width_pixels, height_pixels))
+    return img
 
 def to_BoxFilter(input_image):
     output_blur = cv2.blur(input_image, (25, 25)) #this does nothing unless you want to add another function for blurring
