@@ -101,14 +101,6 @@ def calculate_vessel_diameter(image_path, threshold_low=30, threshold_high=150):
     return max_diameter
 
 
-def white_pixel(input_image):
-    height, width, depth = input_image.shape
-    for h in range(height):
-        for w in range(width):
-            for c in range (depth):
-                if pixel_array[h,w,c] == (255,255,255):
-                    append(h,w,c)
-
 # this is incase you want to put the image into multiple filters
 a = main(img)
 b = to_Kernel(a)
