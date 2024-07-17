@@ -91,7 +91,7 @@ def main():
     cv2.imwrite("zb.png", img_bw)
     return img_bw
     
-def calculate_vessel_diameter(image_path, threshold_low=30, threshold_high=150):
+def get_Diameter(image_path, threshold_low=30, threshold_high=150):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) #instead we should call function for black and white
 
     edges = cv2.Canny(img, threshold_low, threshold_high)
@@ -108,6 +108,35 @@ def calculate_vessel_diameter(image_path, threshold_low=30, threshold_high=150):
         max_diameter = 0
 
     return max_diameter
+
+#centerline
+def get_Centerline(input_image):
+    imgC = cv2.imread(input_image, cv2.IMREAD_GRAYSCALE)
+    blur = cv2.GaussianBlur(imgC, (5, 5), 0) #blurring thing which we already did
+    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    skel = np.zeros_like(thresh)
+    size = np.size(imgC)
+    element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+
+    while True:
+        eroded = cv2.erode(thresh, element)
+        temp = cv2.dilate(eroded, element)
+        temp = cv2.subtract(thresh, temp)
+        skel = cv2.bitwise_or(skel, temp)
+        thresh = eroded.copy()
+
+        if cv2.countNonZero(thresh) == 0:
+            break
+
+    contours, hierarchy = cv2.findContours(skel, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    centerline_img = np.zeros_like(imgC)
+
+    for contour in contours:
+        rows, cols = skel.shape
+        vx, vy, x, y = cv2.fitLine(contour, cv2.DIST_L2, 0, 0.01, 0.01)
+        lefty = int((-x * vy / vx) + y)
+        righty = int(((cols - x) * vy / vx) + y)
+        cv2.line(centerline_img, (cols - 1, righty), (0, lefty), 255, 1)
 
 
 # this is incase you want to put the image into multiple filters
