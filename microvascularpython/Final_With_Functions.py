@@ -84,8 +84,8 @@ def to_Sharpened(input_image):
     return sharpened3 #I dont know which one we should choose srry
 
 
-def main():
-    image_color = cv2.imread("za.png", cv2.IMREAD_GRAYSCALE)
+def main(input_image):
+    image_color = cv2.imread(input_image, cv2.IMREAD_GRAYSCALE)
     thres = 128
     img_bw = cv2.threshold(image_color, thres, 255, cv2.THRESH_BINARY)[1]
     cv2.imwrite("zb.png", img_bw)
