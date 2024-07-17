@@ -2,11 +2,20 @@
 
 import cv2
 import numpy as np
+from numpy import append
+import matplotlib.pyplot as plt
+
+
 
 img = cv2.imwrite(input("Write filename: "), input("Write name of image: "))
 h = int(input("height of image in micrometers: "))
 w = int(input("Width of image in micrometers: "))
 rows, cols = img.shape[:2]
+
+#for white pixel coordinates
+pixel_array = plt.imread(img)
+white_pixel_array = []
+
 
 #kernel blurring (not as effective)
 
@@ -92,6 +101,13 @@ def calculate_vessel_diameter(image_path, threshold_low=30, threshold_high=150):
     return max_diameter
 
 
+def white_pixel(input_image):
+    height, width, depth = input_image.shape
+    for h in range(height):
+        for w in range(width):
+            for c in range (depth):
+                if pixel_array[h,w,c] == (255,255,255):
+                    append(h,w,c)
 
 # this is incase you want to put the image into multiple filters
 a = main(img)
