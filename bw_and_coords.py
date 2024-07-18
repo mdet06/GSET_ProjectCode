@@ -1,12 +1,23 @@
 import cv2
 import numpy as np
+from PIL import Image
 
 #Input image path from user.
 file = input("Paste file path: ")
 
+h  = int(input("height of the image in physical dimeninsions (um): "))
+w  = int(input("width of the image in physical dimeninsions (um): "))
+
+Coord = []
+
 #Read image file.
 img = cv2.imread(file)
 rows, cols = img.shape[:2]
+
+
+im = Image.open(file)
+x = im.size[0]
+y = im.size[1]
 
 #Defines different functions for denoising and sharpening.
 def kernel():
@@ -82,6 +93,26 @@ output_file = 'white_pixel_coords.txt'
 binary_image_output_path = 'binary_image.png'
 record_white_pixel_coordinates(image_path, output_file)
 
+def put_Coord_Dimen(dimen_w, dimen_h):
+    pixel_x = im.size[0]
+    pixel_y = im.size[1]
+    for x in range (pixel_x):
+        for y in range(pixel_y):
+            Coord.append((get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y)))
+
+
+#Coord.append(get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y))
+
+def get_Coord_Dimen_x( a, x):
+   pixel_length_x = im.size[1]
+   
+   return (x/pixel_length_x) *a
+   
+
+
+def get_Coord_Dimen_y( b, y):
+   pixel_length_y = im.size[0]
+   return (y/pixel_length_y) * b
 
 def code():
     cv2.imwrite("sharpened3.png", sharpened3)
