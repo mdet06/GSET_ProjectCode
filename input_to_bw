@@ -9,6 +9,7 @@ file = input("Paste file path: ")
 h  = int(input("height of the image in physical dimeninsions (um): "))
 w  = int(input("width of the image in physical dimeninsions (um): "))
 
+Coord = []
 
 
 img = cv2.imread(file)
@@ -91,6 +92,16 @@ def code():
 
 # we would want to get coordinates, not the user so this would need to be used likely inside another function such as the vessel diameter or cernterline
 
+def put_Coord_Dimen(dimen_w, dimen_h):
+    pixel_x = im.size[0]
+    pixel_y = im.size[1]
+    for x in range (pixel_x):
+        for y in range(pixel_y):
+            Coord.append((get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y)))
+
+
+#Coord.append(get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y))
+
 def get_Coord_Dimen_x( a, x):
    pixel_length_x = im.size[1]
    
@@ -101,11 +112,7 @@ def get_Coord_Dimen_x( a, x):
 def get_Coord_Dimen_y( b, y):
    pixel_length_y = im.size[0]
    return (y/pixel_length_y) * b
-   
     
-
-ab = get_Coord_Dimen_x( w, 6)
-cd = get_Coord_Dimen_y( h,6)
 
 
 code()
