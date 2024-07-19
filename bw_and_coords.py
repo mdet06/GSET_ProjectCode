@@ -99,16 +99,51 @@ def put_Coord_Dimen(arrays, dimen_w, dimen_h, input_path):
         for y in range(Ly):
             Coord.append([get_Coord_Dimen(x, Lx,dimen_w), get_Coord_Dimen(y, Ly, dimen_h)])
 
+
+def put_Coord_Dimen(dimen_w, dimen_h, input_path):
+   # im = Image.open(file)
+   # pixel_x = im.size[0]
+   # pixel_y = im.size[1]
+
+   im = Image.open(input_path)
+   Lx = im.size[0]
+   Ly = im.size[1]
+
+   for x in range(Lx):
+       for y in range(Ly):
+           Coord.append([get_Coord_Dimen(x, Lx,dimen_w), get_Coord_Dimen(y, Ly, dimen_h)])
 #Coord.append(get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y))
 
 def get_Coord_Dimen(x, P_L, R_L):
    return (x/P_L) * R_L
-   
 
 
-def get_Coord_Dimen_y( b, y):
-   pixel_length_y = im.size[0]
-   return (y/pixel_length_y) * b
+#problem - i am not sure if the diameter is always form the x axis  could be a different proprtion depending on the vessel's rotation
+def calculate_vessel_diameter(image_path):
+   # Load image
+   img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+   Lx = im.size[0]
+  
+   # Example preprocessing (you might need different steps based on your images)
+   img = cv2.medianBlur(img, 5)
+  
+   # Example vessel detection (you might need different methods based on your images)
+   _, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+   contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+  
+   # Find the contour with maximum area (assuming it's the vessel)
+   max_contour = max(contours, key=cv2.contourArea)
+  
+   # Fit a circle to the contour to find diameter
+   (x, y), radius = cv2.minEnclosingCircle(max_contour)
+   diameter = radius * 2
+
+
+   a = get_Coord_Dimen(diameter, Lx, w)#is it width
+
+
+  
+   return a
 
 def code():
     cv2.imwrite("sharpened3.png", sharpened3)
