@@ -5,8 +5,8 @@ from PIL import Image
 #Input image path from user.
 file = input("Paste file path: ")
 
-h  = int(input("height of the image in physical dimeninsions (um): "))
-w  = int(input("width of the image in physical dimeninsions (um): "))
+h  = int(input("height of the image in physical dimensions (um): "))
+w  = int(input("width of the image in physical dimensions (um): "))
 
 Coord = []
 
