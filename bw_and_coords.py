@@ -192,4 +192,7 @@ def code():
 
     record_white_pixel_coordinates(image_path, output_file)
 
+
+binary_image_output_path = 'Binary_image_output_path.png'
+
 code()
