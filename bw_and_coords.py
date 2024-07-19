@@ -63,50 +63,46 @@ def binary():
 
 
 
-def record_white_pixel_coordinates(image_path, output_file):
-    # Load the image
-    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+def record_white_pixel_coordinates(input_image, output_file):
+   # Load the image
+   image = cv2.imread(input_image, cv2.IMREAD_GRAYSCALE)
 
-    # Check if the image is loaded correctly
-    if image is None:
-        print(f"Error loading image {image_path}")
-        return
 
-    # Ensure the image is binary
-    _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
 
-    # Save the binary image
-    cv2.imwrite(binary_image_output_path, binary_image)
-    print(f"Binary image saved as {binary_image_output_path}")
 
-    # Find coordinates of white pixels
-    white_pixel_coords = np.column_stack(np.where(binary_image == 255))
+   # Ensure the image is binary
+   _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
 
-    # Write coordinates to the file
-    with open(output_file, 'w') as f:
-        for coord in white_pixel_coords:
-            f.write(f"{coord[0]},{coord[1]}\n")
 
-# Example usage
-image_path = '/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.png'
-output_file = 'white_pixel_coords.txt'
-binary_image_output_path = 'binary_image.png'
-record_white_pixel_coordinates(image_path, output_file)
+   # Save the binary image
+   cv2.imwrite(binary_image_output_path, binary_image)
+   white_pixel_coords = np.column_stack(np.where(binary_image == 255))
+   put_Coord_Dimen(white_pixel_coords, w, h, binary_image_output_path)
+   # Write coordinates to the file
 
-def put_Coord_Dimen(dimen_w, dimen_h):
-    pixel_x = im.size[0]
-    pixel_y = im.size[1]
-    for x in range (pixel_x):
-        for y in range(pixel_y):
-            Coord.append((get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y)))
+   print(Coord)
+   with open(output_file, 'w') as f:
+       for coord in Coord:
+           f.write(f"{coord[0]},{coord[1]}\n")
 
+
+def put_Coord_Dimen(arrays, dimen_w, dimen_h, input_path):
+    # im = Image.open(file)
+    # pixel_x = im.size[0]
+    # pixel_y = im.size[1]
+
+    im = Image.open(input_path)
+    Lx = im.size[0]
+    Ly = im.size[1]
+
+    for x in range(Lx):
+        for y in range(Ly):
+            Coord.append([get_Coord_Dimen(x, Lx,dimen_w), get_Coord_Dimen(y, Ly, dimen_h)])
 
 #Coord.append(get_Coord_Dimen_x( dimen_w, x), get_Coord_Dimen_y(dimen_h, y))
 
-def get_Coord_Dimen_x( a, x):
-   pixel_length_x = im.size[1]
-   
-   return (x/pixel_length_x) *a
+def get_Coord_Dimen(x, P_L, R_L):
+   return (x/P_L) * R_L
    
 
 
