@@ -66,27 +66,35 @@ def binary():
 
 
 
-def record_white_pixel_coordinates(input_image, output_file):
-   # Load the image
-   image = cv2.imread(input_image, cv2.IMREAD_GRAYSCALE)
+def record_white_pixel_coordinates(image_path, output_file):
+    # Load the image
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
+    # Check if the image is loaded correctly
+    if image is None:
+        print(f"Error loading image {image_path}")
+        return
 
+    # Ensure the image is binary
+    _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
 
+    # Save the binary image
+    cv2.imwrite(binary_image_output_path, binary_image)
+    print(f"Binary image saved as {binary_image_output_path}")
 
-   # Ensure the image is binary
-   _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
+    # Find coordinates of white pixels
+    white_pixel_coords = np.column_stack(np.where(binary_image == 255))
 
+    # Write coordinates to the file
+    with open(output_file, 'w') as f:
+        for coord in white_pixel_coords:
+            f.write(f"{coord[0]},{coord[1]}\n")
 
-   # Save the binary image
-   cv2.imwrite(binary_image_output_path, binary_image)
-   white_pixel_coords = np.column_stack(np.where(binary_image == 255))
-   put_Coord_Dimen_Arr(white_pixel_coords, w, h, binary_image_output_path)
-   # Write coordinates to the file
+#image_path = '/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.png'
+#output_file = 'white_pixel_coords.txt'
+#binary_image_output_path = 'binary_image.png'
+#record_white_pixel_coordinates(image_path, output_file)
 
-   print(Coord)
-   with open(output_file, 'w') as f:
-       for coord in Coord:
-           f.write(f"{coord[0]},{coord[1]}\n")
 
 def calculate_vessel_diameters(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -177,16 +185,16 @@ def code():
     supersharp = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/sharpened3.png")
     
     output_box = cv2.boxFilter(supersharp, -1, (5,5), normalize=False)
-
+    cv2.imshow("original", img)
     cv2.imwrite("box_wo_blur.png", output_box)
-
+    cv2.imshow("sharpened", sharpened3)
+    cv2.imshow("box filtered & sharpened", output_box)
     image_color = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.png", cv2.IMREAD_GRAYSCALE)
     thres = 225
     img_bw = cv2.threshold(image_color, thres, 255, cv2.THRESH_BINARY)[1]
 
     cv2.imshow("box, sharp bw", img_bw)
     cv2.imwrite("box_sharp_bw.png", img_bw)
-    cv2.imshow("original", img)
 
     cv2.waitKey(0)
 
