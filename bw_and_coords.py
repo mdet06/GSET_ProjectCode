@@ -77,7 +77,7 @@ def record_white_pixel_coordinates(input_image, output_file):
    # Save the binary image
    cv2.imwrite(binary_image_output_path, binary_image)
    white_pixel_coords = np.column_stack(np.where(binary_image == 255))
-   put_Coord_Dimen(white_pixel_coords, w, h, binary_image_output_path)
+   put_Coord_Dimen_Arr(white_pixel_coords, w, h, binary_image_output_path)
    # Write coordinates to the file
 
    print(Coord)
@@ -86,7 +86,7 @@ def record_white_pixel_coordinates(input_image, output_file):
            f.write(f"{coord[0]},{coord[1]}\n")
 
 
-def put_Coord_Dimen(arrays, dimen_w, dimen_h, input_path):
+def put_Coord_Dimen_Arr(arrays, dimen_w, dimen_h, input_path):
     # im = Image.open(file)
     # pixel_x = im.size[0]
     # pixel_y = im.size[1]
