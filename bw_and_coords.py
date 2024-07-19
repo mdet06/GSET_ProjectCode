@@ -85,6 +85,29 @@ def record_white_pixel_coordinates(input_image, output_file):
        for coord in Coord:
            f.write(f"{coord[0]},{coord[1]}\n")
 
+def calculate_vessel_diameters(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+    img = cv2.medianBlur(img, 5)
+    
+    im = Image.open(image_path)
+    _, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    diameters = []
+
+    for contour in contours:
+        (x, y), radius = cv2.minEnclosingCircle(contour)
+        diameter = radius * 2
+        diameters.append(diameter)
+        
+    Lx = im.size[0]
+
+    for d in range(int(len(diameters))):
+        diameters[d] = get_Coord_Dimen(diameters[d], Lx, w)
+   
+
+    return diameters
 
 def put_Coord_Dimen_Arr(arrays, dimen_w, dimen_h, input_path):
     # im = Image.open(file)
