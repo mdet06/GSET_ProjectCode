@@ -1,17 +1,14 @@
 import cv2
 import numpy as np
 
-#Input image path from user.
 file = input("Paste file path: ")
 
-#Read image file.
 img = cv2.imread(file)
 rows, cols = img.shape[:2]
 
 gaussian_blur = cv2.GaussianBlur(img, (7,7), 2)
 sharpened3 = cv2.addWeighted(img,7.5,gaussian_blur, -6.5,0)
 
-# Function to convert pixel coordinates to physical dimensions
 def get_Coord_Dimen_x(a, x, img_width):
     return (x / img_width) * a
 
@@ -59,18 +56,15 @@ def code():
 
     
 
-     # Load the image
+    
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-    # Check if the image is loaded correctly
     if image is None:
         print(f"Error loading image {image_path}")
         return
 
-    # Ensure the image is binary
     _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
 
-    # Save the binary image
     cv2.imwrite("binaryimg.png", binary_image)
     print(f"Binary image saved as binaryimg.png")
 
@@ -79,35 +73,26 @@ def code():
 def record_white_pixel_coordinates(image_path, output_file, height_um):
     code()
 
-    # Load the image
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-    # Check if the image is loaded correctly
     if image is None:
         print(f"Error loading image {image_path}")
         return
-
-    # Ensure the image is binary
     _, binary_image = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)
 
-    # Find coordinates of white pixels
     white_pixel_coords = np.column_stack(np.where(binary_image == 255))
 
-    # Calculate the width in micrometers using the image's aspect ratio
     aspect_ratio = image.shape[1] / image.shape[0]
     width_um = height_um * aspect_ratio
 
-    # Convert pixel coordinates to physical dimensions
     physical_coords = [(get_Coord_Dimen_x(width_um, x, image.shape[1]), get_Coord_Dimen_y(height_um, y, image.shape[0])) for y, x in white_pixel_coords]
 
-    # Write physical coordinates to the file
     with open(output_file, 'w') as f:
         for coord in physical_coords:
             f.write(f"{coord[0]},{coord[1]}\n")
 
     print(f"Physical coordinates of white pixels have been saved to '{output_file}'")
 
-# Input image path and height in micrometers from user
 image_path = "/Users/daisymaturo/Downloads/microvascularpython/box_sharp_bw.png"
 height_um = int(input("Height of the image in physical dimensions (um): "))
 output_file = 'white_pixel_coords.txt'
