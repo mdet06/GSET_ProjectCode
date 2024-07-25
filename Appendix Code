@@ -98,7 +98,8 @@ def create_spline(event):
             evalpts = np.array(curve.evalpts)
                    
             # Plot the fitted curve
-            curve_line, = ax.plot(evalpts[:, 0], evalpts[:, 1], color='blue', label='Fitted Curve')
+            curve_line, = ax.plot(evalpts[:, 0], evalpts[:, 1], color='blue', 
+                        label='Fitted Curve')
                    
             # Update scatter plot
             ax.scatter(*zip(*points), color='red', label='Data Points')
