@@ -19,7 +19,8 @@ def get_Coord_Dimen_y(b, y, img_height):
 def find_centerlines(binary_image_path):
     binary_image = cv2.imread(binary_image_path, cv2.IMREAD_GRAYSCALE)
     
-    skeleton = cv2.ximgproc.thinning(binary_image, thinningType=cv2.ximgproc.THINNING_ZHANGSUEN)
+    skeleton = cv2.ximgproc.thinning(binary_image, thinningType=cv2.ximgproc.THINNING_
+            ZHANGSUEN)
 
     contours, _ = cv2.findContours(skeleton, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -40,14 +41,16 @@ def find_centerlines(binary_image_path):
 def code():
     cv2.imwrite("sharpened3.png", sharpened3)
 
-    supersharp = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/sharpened3.png")
+    supersharp = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/sharpened3.
+                png")
     
     output_box = cv2.boxFilter(supersharp, -1, (5,5), normalize=False)
     cv2.imshow("original", img)
     cv2.imwrite("box_wo_blur.png", output_box)
     cv2.imshow("sharpened", sharpened3)
     cv2.imshow("box filtered & sharpened", output_box)
-    image_color = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.png", cv2.IMREAD_GRAYSCALE)
+    image_color = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.
+                png",cv2.IMREAD_GRAYSCALE)
     thres = 225
     img_bw = cv2.threshold(image_color, thres, 255, cv2.THRESH_BINARY)[1]
 
@@ -85,7 +88,8 @@ def record_white_pixel_coordinates(image_path, output_file, height_um):
     aspect_ratio = image.shape[1] / image.shape[0]
     width_um = height_um * aspect_ratio
 
-    physical_coords = [(get_Coord_Dimen_x(width_um, x, image.shape[1]), get_Coord_Dimen_y(height_um, y, image.shape[0])) for y, x in white_pixel_coords]
+    physical_coords = [(get_Coord_Dimen_x(width_um, x, image.shape[1]), get_Coord_Dimen_y
+                        (height_um, y, image.shape[0])) for y, x in white_pixel_coords]
 
     with open(output_file, 'w') as f:
         for coord in physical_coords:
