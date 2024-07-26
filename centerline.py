@@ -86,7 +86,7 @@ def find_centerlines(binary_image_path):
     
     skeleton = cv2.ximgproc.thinning(binary_image, thinningType=cv2.ximgproc.THINNING_ZHANGSUEN)
 
-    contours, _ = cv2.findContours(skeleton, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(skeleton, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     output_image = cv2.cvtColor(binary_image, cv2.COLOR_GRAY2BGR)
     for contour in contours:
