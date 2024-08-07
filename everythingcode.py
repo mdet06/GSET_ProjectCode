@@ -16,8 +16,7 @@ def get_Coord_Dimen_y(b, y, img_height):
 
 def find_centerlines(binary_image_path):
     binary_image = cv2.imread(binary_image_path, cv2.IMREAD_GRAYSCALE)
-    skeleton = cv2.ximgproc.thinning(binary_image, thinningType=cv2.ximgproc.THINNING_
-            ZHANGSUEN)
+    skeleton = cv2.ximgproc.thinning(binary_image, thinningType=cv2.ximgproc.THINNING_ZHANGSUEN)
     contours, _ = cv2.findContours(skeleton, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     output_image = cv2.cvtColor(binary_image, cv2.COLOR_GRAY2BGR)
     for contour in contours:
@@ -32,15 +31,13 @@ def find_centerlines(binary_image_path):
 
 def code():
     cv2.imwrite("sharpened3.png", sharpened3)
-    supersharp = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/sharpened3.
-                png")
+    supersharp = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/sharpened3.png")
     output_box = cv2.boxFilter(supersharp, -1, (5,5), normalize=False)
     cv2.imshow("original", img)
     cv2.imwrite("box_wo_blur.png", output_box)
     cv2.imshow("sharpened", sharpened3)
     cv2.imshow("box filtered & sharpened", output_box)
-    image_color = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.
-                png",cv2.IMREAD_GRAYSCALE)
+    image_color = cv2.imread("/Users/daisymaturo/Downloads/microvascularpython/box_wo_blur.png",cv2.IMREAD_GRAYSCALE)
     thres = 225
     img_bw = cv2.threshold(image_color, thres, 255, cv2.THRESH_BINARY)[1]
     cv2.imshow("box, sharp bw", img_bw)
